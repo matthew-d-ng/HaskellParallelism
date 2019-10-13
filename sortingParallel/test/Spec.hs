@@ -15,12 +15,6 @@ testValues = [ ([] :: [Int])
     , [10, 5, 2, 5, 6, 2, 1, 8, 9, 3]
     ]
 
-runTests :: [IO ()] -> IO ()
-runTests (x:[]) = do x
-runTests (x:xs) = do
-    x
-    runTests xs
-
 testSplit :: IO ()
 testSplit = do
     print $ split ([] :: [Int])
@@ -40,13 +34,13 @@ testMerge = do
     print $ merge [1, 2, 2, 3, 4] [2]
 
 testMergesort :: IO ()
-testMergesort = runTests $ map (print . mergesort) testValues
+testMergesort = mapM_ (print . mergesort) testValues
 
 testQuicksort :: IO ()
-testQuicksort = runTests $ map (print . quicksort) testValues
+testQuicksort = mapM_ (print . quicksort) testValues
 
 testQuicksortPar :: IO ()
-testQuicksortPar = runTests $ map (print . quicksortPar) testValues
+testQuicksortPar = mapM_ (print . quicksortPar) testValues
 
 testMergesortPar :: IO ()
-testMergesortPar = runTests $ map (print . mergesortPar) testValues
+testMergesortPar = mapM_ (print . mergesortPar) testValues

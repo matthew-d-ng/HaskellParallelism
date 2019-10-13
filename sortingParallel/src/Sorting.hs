@@ -13,7 +13,7 @@ import Control.Parallel.Strategies
 
 quicksort :: Ord a => [a] -> [a]
 quicksort [] = []
-quicksort (p:xs) = (quicksort less) ++ [p] ++ (quicksort more)
+quicksort (p:xs) = (quicksort less) ++ (p:(quicksort more))
     where
         less = filter (< p) xs
         more = filter (>= p) xs
@@ -40,10 +40,10 @@ merge (x:xs) (y:ys)
 
 quicksortPar :: Ord a => [a] -> [a]
 quicksortPar [] = []
-quicksortPar (x:xs) = left ++ [x] ++ right `using` strat
+quicksortPar (x:xs) = left ++ (x:right) `using` strat
     where
-        left = quicksortPar (filter (< x) xs)
-        right = quicksortPar (filter (>= x) xs)
+        left = quicksort (filter (< x) xs)
+        right = quicksort (filter (>= x) xs)
         strat f = do
             rpar left
             rseq right
@@ -55,8 +55,8 @@ mergesortPar [x] = [x]
 mergesortPar xs = merge left right `using` strat
     where
         (a, b) = split xs
-        left = mergesortPar a
-        right = mergesortPar b
+        left = mergesort a
+        right = mergesort b
         strat f = do
             rpar left
             rseq right

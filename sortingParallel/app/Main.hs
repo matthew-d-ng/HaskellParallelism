@@ -1,6 +1,21 @@
 module Main where
 
+import System.Random
+import Data.Time
 import Sorting
+import Control.DeepSeq
+
+getRandomList :: Int -> [Int]
+getRandomList n = (take n (randomRs(0, 1000000) (mkStdGen 42)))
+
+-- set algorithm here
+testSort = mergesortPar
 
 main :: IO ()
-main = print $ quicksort [12, 35, 45, 1, 8, 3, 9, 92, 5, 1, 7, 8, 3, 4, 5, 10, 35]
+main = do
+    let values = getRandomList 1000000
+    t0 <- values `deepseq` getCurrentTime
+    let result = testSort values
+    t1 <- result `deepseq` getCurrentTime
+    putStr "Time taken: "
+    print $ diffUTCTime t1 t0
